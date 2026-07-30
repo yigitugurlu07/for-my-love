@@ -42,12 +42,65 @@ function typeText(el,text){el.textContent="";let i=0;typingTimer=setInterval(()=
 function goGallery(){showScreen("galleryScreen")}
 $("#letterOne").onclick=goGallery;$("#letterOne").onkeydown=e=>{if(e.key==="Enter"||e.key===" ")goGallery()};
 const photoCard=$("#photoCard"),galleryImage=$("#galleryImage");
+let photoTransitioning=false;
+
+// Fotoğrafları galeri açılmadan tarayıcı önbelleğine al.
+CONFIG.photos.forEach(src=>{
+  const img=new Image();
+  img.src=src;
+});
+
 function nextPhoto(){
-  if(photoIndex>=CONFIG.photos.length-1){showScreen("noteTwoScreen");return}
-  photoCard.classList.remove("next");void photoCard.offsetWidth;photoCard.classList.add("next");
-  setTimeout(()=>{photoIndex++;galleryImage.src=CONFIG.photos[photoIndex];$("#photoCounter").textContent=`${photoIndex+1} / ${CONFIG.photos.length}`},260)
+  // Animasyon sürerken gelen ikinci dokunuşu yok say.
+  if(photoTransitioning)return;
+
+  if(photoIndex>=CONFIG.photos.length-1){
+    photoTransitioning=true;
+    showScreen("noteTwoScreen");
+    setTimeout(()=>{photoTransitioning=false},500);
+    return;
+  }
+
+  photoTransitioning=true;
+  const nextIndex=photoIndex+1;
+  const nextSrc=CONFIG.photos[nextIndex];
+  const preload=new Image();
+
+  const applyNextPhoto=()=>{
+    photoCard.classList.remove("next");
+    void photoCard.offsetWidth;
+    photoCard.classList.add("next");
+
+    // Kart görünmez olduğu anda yeni fotoğrafı yerleştir.
+    setTimeout(()=>{
+      photoIndex=nextIndex;
+      galleryImage.src=nextSrc;
+      $("#photoCounter").textContent=`${photoIndex+1} / ${CONFIG.photos.length}`;
+    },220);
+
+    // Animasyon tamamlandıktan sonra tekrar dokunmaya izin ver.
+    setTimeout(()=>{
+      photoCard.classList.remove("next");
+      photoTransitioning=false;
+    },620);
+  };
+
+  if(preload.complete){
+    applyNextPhoto();
+  }else{
+    preload.onload=applyNextPhoto;
+    preload.onerror=applyNextPhoto;
+    preload.src=nextSrc;
+  }
 }
-$("#photoDeck").onclick=nextPhoto;$("#photoDeck").onkeydown=e=>{if(e.key==="Enter"||e.key===" ")nextPhoto()};
+
+$("#photoDeck").onclick=nextPhoto;
+$("#photoDeck").onkeydown=e=>{
+  if(e.key==="Enter"||e.key===" "){
+    e.preventDefault();
+    nextPhoto();
+  }
+};
 function goClue(){showScreen("clueScreen")}$("#letterTwo").onclick=goClue;$("#letterTwo").onkeydown=e=>{if(e.key==="Enter"||e.key===" ")goClue()};
 function goProposal(){showScreen("proposalScreen")}$("#ringBoxButton").onclick=goProposal;$("#openRingQuestion").onclick=goProposal;
 function checkProposal(){

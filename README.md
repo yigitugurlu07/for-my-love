@@ -1,15 +1,7 @@
-# Sinematik sevgili sürpriz sitesi
+# Sevgili Özür — Romantik Final Sürümü
 
-Bu sürümde:
-- İlk dokunuşta başlayan özgün ve telifsiz piyano atmosferi
-- Ses aç/kapat düğmesi
-- Kayan yıldızlar
-- Kutu açılma animasyonu
-- Polaroid fotoğraf geçişleri
-- Yüzük kutusu final animasyonu
-- Konfeti ve uçuşan kalpler
+Repository ana dizinindeki eski dosyaların üzerine bu paketteki dosyaları yükleyin.
+GitHub Pages bağlantısı değişmez.
 
-İlk kilit cevabı: 19052026
-Son kutu cevabı: evet
-
-GitHub Pages'e yüklerken bu klasördeki tüm dosya ve klasörleri repository ana dizinine yükleyin.
+Kilit cevabı: 19052026
+Son cevap: evet
